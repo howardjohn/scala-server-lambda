@@ -15,20 +15,30 @@ class LambdaHandler(service: HttpService[IO]) {
   def handle(is: InputStream, os: OutputStream): Unit =
     in(is)
       .map {
-        case Get(url) => GET(asUri(url))
-        case Post(url, body) => POST(asUri(url), body)
+        case Get(url, headers) => GET(asUri(url))
+        case Post(url, body, headers) => POST(asUri(url), body)
       }
-      .map(_.unsafeRunSync)
+      .map(_.unsafeRunSync) // todo bring this out with for loop, map
       .map(runRequest)
       .flatMap(result => out(result, os))
       .get
 
-  private def runRequest(request: Request[IO]): String =
+  private def runRequest(request: Request[IO]): ProxyResponse =
     service
       .run(request)
       .getOrElse(Response.notFound)
-      .flatMap(_.as[String])
+      .flatMap(asProxyResponse)
       .unsafeRunSync()
+
+  private def asProxyResponse(resp: Response[IO]): IO[ProxyResponse] =
+    for {
+      body <- resp.as[String]
+    } yield ProxyResponse(
+      resp.status.code,
+      resp.headers
+        .map(h => h.name.value -> h.value)
+        .toMap,
+      body)
 }
 
 object LambdaHandler {

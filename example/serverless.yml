@@ -1,0 +1,19 @@
+service: example
+
+provider:
+  name: aws
+  runtime: java8
+  region: us-west-2
+  stage: dev
+
+package:
+  artifact: target/scala-2.12/example.jar
+
+functions:
+  api:
+    handler: howardjohn.http4s.lambda.example.Route$EntryPoint::handle
+    events:
+      - http:
+          path: "{proxy+}"
+          method: any
+          cors: true

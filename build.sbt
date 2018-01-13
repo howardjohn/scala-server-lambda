@@ -1,4 +1,4 @@
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.4"
 
 val Http4sVersion = "0.18.0-M8"
 
@@ -19,23 +19,9 @@ lazy val http4slambda = project
 
 lazy val example = project
   .in(file("example"))
-  .enablePlugins(AwsLambdaPlugin)
   .settings(
     moduleName := "example",
-    libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-dsl" % Http4sVersion,
-      "org.http4s" %% "http4s-circe" % Http4sVersion,
-      "io.circe" %% "circe-parser" % "0.9.0",
-      "io.circe" %% "circe-generic" % "0.9.0"
-    ),
-    lambdaHandlers := Seq("test" -> "howardjohn.http4s.lambda.example.Route$EntryPoint::handle"),
-    s3Bucket := Some("http4s4lambda-jars"),
-    awsLambdaMemory := Some(512),
-    awsLambdaTimeout := Some(10),
-    roleArn := Some("arn:aws:iam::415308607406:role/service-role/lamda"),
-    region := Some("us-west-2"),
-    vpcConfigSecurityGroupIds := None,
-    vpcConfigSubnetIds := None
+    assemblyJarName in assembly := "example.jar"
   )
   .dependsOn(http4slambda)
 

@@ -2,29 +2,23 @@ package howardjohn.http4s.lambda
 
 import java.io.{InputStream, OutputStream}
 
-import io.circe.parser.decode
-import io.circe.Json
-import io.circe.syntax._
-import io.circe.parser.parse
 import io.circe.generic.auto._
+import io.circe.parser.decode
+import io.circe.syntax._
+import org.http4s.util.CaseInsensitiveString
+import org.http4s.{Header, Headers}
 
 import scala.io.Source
-import scala.util.{Failure, Success, Try}
+import scala.util.Try
 
 object Encoding {
 
-  sealed trait HttpRequest
-
-  case class Get(
+  case class HttpRequest(
+    method: String,
     url: String,
-    headers: Option[Map[String, String]]
-  ) extends HttpRequest
-
-  case class Post(
-    url: String,
-    body: Json,
-    headers: Option[Map[String, String]]
-  ) extends HttpRequest
+    body: Option[String],
+    headers: Headers
+  )
 
   case class ProxyRequest(
     path: String,
@@ -44,8 +38,7 @@ object Encoding {
     val t = for {
       rawInput <- Try(Source.fromInputStream(is).mkString)
       input <- decode[ProxyRequest](rawInput).toTry
-      request <- parseRequest(input)
-    } yield request
+    } yield parseRequest(input)
     is.close()
     t
   }
@@ -58,15 +51,19 @@ object Encoding {
     t
   }
 
-  private def parseRequest(request: ProxyRequest): Try[HttpRequest] =
-    request.httpMethod match {
-      case "GET" => Success(Get(reconstructPath(request), request.headers))
-      case "POST" =>
-        for {
-          body <- parse(request.body.getOrElse("")).toTry
-        } yield Post(reconstructPath(request), body, request.headers) // todo keep body optional?
-      case _ => Failure(new RuntimeException("Invalid proxy request"))
-    }
+  private def parseRequest(request: ProxyRequest): HttpRequest =
+    HttpRequest(
+      request.httpMethod,
+      reconstructPath(request),
+      request.body,
+      Headers(
+        request.headers
+          .getOrElse(Map())
+          .map {
+            case (k, v) => Header.Raw(CaseInsensitiveString(k), v)
+          }
+          .toList)
+    )
 
   private def reconstructPath(request: ProxyRequest): String = {
     val requestString = request.queryStringParameters

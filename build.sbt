@@ -11,7 +11,8 @@ lazy val http4slambda = project
       "org.http4s" %% "http4s-circe" % Http4sVersion,
       "io.circe" %% "circe-parser" % "0.9.0",
       "io.circe" %% "circe-generic" % "0.9.0",
-      "org.scalatest" %% "scalatest" % "3.0.4" % "test"
+      "org.scalatest" %% "scalatest" % "3.0.4" % "test",
+      "org.http4s" %% "http4s-dsl" % Http4sVersion % "test"
     )
   )
 

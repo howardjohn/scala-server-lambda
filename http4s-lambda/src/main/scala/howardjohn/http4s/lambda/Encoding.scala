@@ -5,7 +5,6 @@ import java.io.{InputStream, OutputStream}
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._
-import org.http4s.util.CaseInsensitiveString
 import org.http4s.{Header, Headers}
 
 import scala.io.Source
@@ -16,15 +15,15 @@ object Encoding {
   case class HttpRequest(
     method: String,
     url: String,
-    body: Option[String],
-    headers: Headers
+    headers: Headers,
+    body: Option[String]
   )
 
   case class ProxyRequest(
-    path: String,
     httpMethod: String,
-    body: Option[String],
+    path: String,
     headers: Option[Map[String, String]],
+    body: Option[String],
     queryStringParameters: Option[Map[String, String]]
   )
 
@@ -55,14 +54,14 @@ object Encoding {
     HttpRequest(
       request.httpMethod,
       reconstructPath(request),
-      request.body,
       Headers(
         request.headers
           .getOrElse(Map())
           .map {
-            case (k, v) => Header.Raw(CaseInsensitiveString(k), v)
+            case (k, v) => Header(k, v)
           }
-          .toList)
+          .toList),
+      request.body
     )
 
   private def reconstructPath(request: ProxyRequest): String = {
@@ -70,7 +69,10 @@ object Encoding {
       .map {
         _.map {
           case (k, v) => s"$k=$v"
-        }.mkString("?", "&", "")
+        }.mkString("&")
+      }
+      .map { qs =>
+        if (qs.isEmpty) "" else "?" + qs
       }
       .getOrElse("")
     request.path + requestString

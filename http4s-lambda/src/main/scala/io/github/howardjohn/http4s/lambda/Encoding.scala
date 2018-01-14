@@ -1,4 +1,4 @@
-package howardjohn.http4s.lambda
+package io.github.howardjohn.http4s.lambda
 
 import java.io.{InputStream, OutputStream}
 

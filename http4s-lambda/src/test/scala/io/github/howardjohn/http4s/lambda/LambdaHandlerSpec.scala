@@ -1,10 +1,10 @@
-package howardjohn.http4s.lambda
+package io.github.howardjohn.http4s.lambda
 
 import java.io.{ByteArrayInputStream, ByteArrayOutputStream, InputStream}
 import java.nio.charset.StandardCharsets
 
 import cats.effect.IO
-import howardjohn.http4s.lambda.Encoding.{ProxyRequest, ProxyResponse}
+import io.github.howardjohn.http4s.lambda.Encoding._
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._

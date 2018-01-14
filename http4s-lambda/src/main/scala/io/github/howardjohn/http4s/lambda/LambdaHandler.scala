@@ -1,10 +1,10 @@
-package howardjohn.http4s.lambda
+package io.github.howardjohn.http4s.lambda
 
 import java.io.{InputStream, OutputStream}
 
 import cats.effect.IO
-import fs2.{text, Stream}
-import howardjohn.http4s.lambda.Encoding._
+import fs2.{Stream, text}
+import io.github.howardjohn.http4s.lambda.Encoding._
 import org.http4s._
 
 import scala.util.Try

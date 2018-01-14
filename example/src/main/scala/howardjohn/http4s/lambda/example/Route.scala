@@ -1,7 +1,6 @@
 package howardjohn.http4s.lambda.example
 
 import cats.effect._
-import howardjohn.http4s.lambda.LambdaHandler
 import io.circe.generic.auto._
 import org.http4s._
 import org.http4s.circe._

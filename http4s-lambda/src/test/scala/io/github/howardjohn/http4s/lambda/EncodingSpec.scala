@@ -1,10 +1,11 @@
-package howardjohn.http4s.lambda
+package io.github.howardjohn.http4s.lambda
+
 import java.io.{ByteArrayInputStream, InputStream}
 import java.nio.charset.StandardCharsets
 
-import howardjohn.http4s.lambda.Encoding._
 import io.circe.generic.auto._
 import io.circe.syntax._
+import io.github.howardjohn.http4s.lambda.Encoding._
 import org.http4s.{Header, Headers}
 import org.scalatest.TryValues._
 import org.scalatest._

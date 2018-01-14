@@ -3,7 +3,11 @@ http4s-lambda allows you to run http4s `HttpServices` over API Gateway and AWS L
 
 ## Getting Started
 
-First, we define a simple `HttpService`. Then, we simply need to define a new class for Lambda.
+First, add the dependency:
+
+`libraryDependencies += "io.github.howardjohn" %% "http4s-lambda" % "0.1.0"`
+
+Next, we define a simple `HttpService`. Then, we simply need to define a new class for Lambda.
 
 ```scala
 object Route {
@@ -24,4 +28,3 @@ Once deployed to Lambda, the handler should be specified as `<package>.Route$Ent
 Finally, an API can be created in API Gateway. [Lambda Proxy integration](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html) must be enabled.
 
 A complete example can be found in [here](example). Note the use of [serverless](https://github.com/serverless/serverless), which automates deployment of the package and sets up API Gateway, along with many other features.
-

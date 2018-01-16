@@ -11,7 +11,7 @@ package:
 
 functions:
   api:
-    handler: howardjohn.http4s.lambda.example.Route$EntryPoint::handle
+    handler: io.github.howardjohn.http4s.lambda.example.Route$EntryPoint::handle
     events:
       - http:
           path: "{proxy+}"

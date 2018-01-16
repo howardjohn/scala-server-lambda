@@ -1,23 +1,13 @@
 package io.github.howardjohn.http4s.lambda
 
-import java.io.{InputStream, OutputStream}
-
+import cats.effect.IO
+import fs2.{text, Stream}
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._
-import org.http4s.{Header, Headers}
-
-import scala.io.Source
-import scala.util.Try
+import org.http4s.{EmptyBody, Header, Headers, Method, ParseFailure, Request, Uri}
 
 object Encoding {
-
-  case class HttpRequest(
-    method: String,
-    url: String,
-    headers: Headers,
-    body: Option[String]
-  )
 
   case class ProxyRequest(
     httpMethod: String,
@@ -33,36 +23,35 @@ object Encoding {
     body: String
   )
 
-  def in(is: InputStream): Try[HttpRequest] = {
-    val t = for {
-      rawInput <- Try(Source.fromInputStream(is).mkString)
-      input <- decode[ProxyRequest](rawInput).toTry
-    } yield parseRequest(input)
-    is.close()
-    t
-  }
+  def decodeRequest(rawInput: String): Either[Exception, Request[IO]] =
+    for {
+      input <- decode[ProxyRequest](rawInput)
+      request <- parseRequest(input)
+    } yield request
 
-  def out(output: ProxyResponse, os: OutputStream): Try[Unit] = {
-    val t = Try {
-      os.write(output.asJson.noSpaces.getBytes("UTF-8"))
+  def encodeResponse(response: ProxyResponse): String =
+    response.asJson.noSpaces
+
+  private def parseRequest(request: ProxyRequest): Either[ParseFailure, Request[IO]] =
+    for {
+      uri <- Uri.fromString(reconstructPath(request))
+      method <- Method.fromString(request.httpMethod)
+    } yield
+      Request[IO](
+        method,
+        uri,
+        headers = request.headers.map(toHeaders).getOrElse(Headers.empty),
+        body = request.body.map(encodeBody).getOrElse(EmptyBody)
+      )
+
+  private def toHeaders(headers: Map[String, String]): Headers =
+    Headers {
+      headers.map {
+        case (k, v) => Header(k, v)
+      }.toList
     }
-    os.close()
-    t
-  }
 
-  private def parseRequest(request: ProxyRequest): HttpRequest =
-    HttpRequest(
-      request.httpMethod,
-      reconstructPath(request),
-      Headers(
-        request.headers
-          .getOrElse(Map())
-          .map {
-            case (k, v) => Header(k, v)
-          }
-          .toList),
-      request.body
-    )
+  private def encodeBody(body: String) = Stream(body).through(text.utf8Encode)
 
   private def reconstructPath(request: ProxyRequest): String = {
     val requestString = request.queryStringParameters

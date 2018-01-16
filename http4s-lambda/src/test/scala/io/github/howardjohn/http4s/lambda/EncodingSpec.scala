@@ -1,60 +1,56 @@
 package io.github.howardjohn.http4s.lambda
 
-import java.io.{ByteArrayInputStream, InputStream}
-import java.nio.charset.StandardCharsets
-
+import cats.effect.IO
 import io.circe.generic.auto._
 import io.circe.syntax._
 import io.github.howardjohn.http4s.lambda.Encoding._
-import org.http4s.{Header, Headers}
-import org.scalatest.TryValues._
+import org.http4s.Uri.uri
+import org.http4s._
 import org.scalatest._
 
 class EncodingSpec extends FlatSpec with Matchers {
   import EncodingSpec._
-  "in" should "map empty values" in {
-    runReq(ProxyRequest("GET", "/api", None, None, None)).shouldBe(
-      HttpRequest("GET", "/api", Headers.empty, None)
-    )
+  "decodeRequest" should "map empty values" in {
+    val req = runReq(ProxyRequest("GET", "/api", None, None, None))
+    assert(req.headers == Headers.empty)
+    assert(req.body == EmptyBody)
   }
 
-  it should "combine url and empty query parameters" in {
-    runReq(ProxyRequest("GET", "/api", None, None, Some(Map()))).shouldBe(
-      HttpRequest("GET", "/api", Headers.empty, None)
-    )
-  }
-
-  it should "combine url and one query parameter" in {
-    runReq(ProxyRequest("GET", "/api", None, None, Some(Map("a" -> "b")))).shouldBe(
-      HttpRequest("GET", "/api?a=b", Headers.empty, None)
-    )
-  }
-
-  it should "combine url and many query parameters" in {
-    runReq(ProxyRequest("GET", "/api", None, None, Some(Map("a" -> "b", "c" -> "d")))).shouldBe(
-      HttpRequest("GET", "/api?a=b&c=d", Headers.empty, None)
-    )
-  }
-
-  it should "map headers" in {
-    runReq(ProxyRequest("GET", "/api", Some(Map("a" -> "b", "c" -> "d")), None, None)).shouldBe(
-      HttpRequest("GET", "/api", Headers(Header("a", "b"), Header("c", "d")), None)
-    )
+  it should "map http method" in {
+    val req = runReq(ProxyRequest("GET", "/api", None, None, None))
+    assert(req.method == Method.GET)
   }
 
   it should "map body" in {
-    runReq(ProxyRequest("GET", "/api", None, Some("body"), None)).shouldBe(
-      HttpRequest("GET", "/api", Headers.empty, Some("body"))
-    )
+    val req = runReq(ProxyRequest("GET", "/api", None, Some("body"), None))
+    assert(req.body.compile.toList.unsafeRunSync == "body".getBytes.toSeq)
+  }
+
+  it should "combine url and empty query parameters" in {
+    val req = runReq(ProxyRequest("GET", "/api", None, None, Some(Map())))
+    assert(req.uri == uri("/api"))
+  }
+
+  it should "combine url and one query parameter" in {
+    val req = runReq(ProxyRequest("GET", "/api", None, None, Some(Map("a" -> "b"))))
+    assert(req.uri == uri("/api?a=b"))
+  }
+
+  it should "combine url and many query parameters" in {
+    val req = runReq(ProxyRequest("GET", "/api", None, None, Some(Map("a" -> "b", "c" -> "d"))))
+    assert(req.uri == uri("/api?a=b&c=d"))
+  }
+
+  it should "map headers" in {
+    val req = runReq(ProxyRequest("GET", "/api", Some(Map("a" -> "b", "c" -> "d")), None, None))
+    assert(req.method == Method.GET)
+    assert(req.headers == Headers(Header("a", "b"), Header("c", "d")))
   }
 }
 
 object EncodingSpec {
 
-  def toStream(source: String): InputStream =
-    new ByteArrayInputStream(source.getBytes(StandardCharsets.UTF_8))
-
-  def runReq(req: ProxyRequest): HttpRequest =
-    in(toStream(req.asJson.noSpaces)).success.value
+  def runReq(req: ProxyRequest): Request[IO] =
+    decodeRequest(req.asJson.noSpaces).right.get
 
 }

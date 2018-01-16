@@ -3,47 +3,44 @@ package io.github.howardjohn.http4s.lambda
 import java.io.{InputStream, OutputStream}
 
 import cats.effect.IO
-import fs2.{Stream, text}
 import io.github.howardjohn.http4s.lambda.Encoding._
+import io.github.howardjohn.http4s.lambda.IOStreamOps._
 import org.http4s._
-
-import scala.util.Try
 
 class LambdaHandler(service: HttpService[IO]) {
 
-  def handle(is: InputStream, os: OutputStream): Unit =
-    createRequest(is)
-      .map(runRequest)
-      .flatMap(result => out(result, os))
-      .get
+  def handle(is: InputStream, os: OutputStream): Unit = {
+    val result = for {
+      input <- is.consume()
+      request <- IO.fromEither(decodeRequest(input))
+      response <- runRequest(request)
+      rawResponse = encodeResponse(response)
+      _ <- os.writeAndClose(rawResponse)
+    } yield ()
 
-  private def createRequest(is: InputStream): Try[Request[IO]] =
-    for {
-      input <- in(is)
-      uri <- Uri.fromString(input.url).toTry
-      method <- Method.fromString(input.method).toTry
-    } yield
-      Request[IO](
-        method,
-        uri,
-        headers = input.headers,
-        body = input.body.map(Stream(_).through(text.utf8Encode)).getOrElse(EmptyBody))
+    result.unsafeRunAsync {
+      _.fold(
+        error => throw error,
+        identity
+      )
+    }
+  }
 
-  private def runRequest(request: Request[IO]): ProxyResponse =
+  private def runRequest(request: Request[IO]): IO[ProxyResponse] =
     service
       .run(request)
       .getOrElse(Response.notFound)
       .flatMap(asProxyResponse)
-      .unsafeRunSync()
 
   private def asProxyResponse(resp: Response[IO]): IO[ProxyResponse] =
-    for {
-      body <- resp.as[String]
-    } yield
-      ProxyResponse(
-        resp.status.code,
-        resp.headers
-          .map(h => h.name.value -> h.value)
-          .toMap,
-        body)
+    resp
+      .as[String]
+      .map { body =>
+        ProxyResponse(
+          resp.status.code,
+          resp.headers
+            .map(h => h.name.value -> h.value)
+            .toMap,
+          body)
+      }
 }

@@ -9,7 +9,7 @@ lazy val core = project
   .settings(commonSettings)
   .settings(
     name := "http4s-lambda",
-    version := "0.1.0",
+    version := "0.2.0-SNAPSHOT",
     moduleName := "http4s-lambda",
     scalacOptions ++= Seq("-Ypartial-unification"),
     libraryDependencies ++= {

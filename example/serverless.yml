@@ -17,3 +17,8 @@ functions:
           path: "{proxy+}"
           method: any
           cors: true
+      - schedule:
+          rate: rate(4 minutes)
+          input:
+            httpMethod: GET
+            path: /hello/keepWarm

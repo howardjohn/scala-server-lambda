@@ -18,12 +18,7 @@ class LambdaHandler(service: HttpService[IO]) {
       _ <- os.writeAndClose(rawResponse)
     } yield ()
 
-    result.unsafeRunAsync {
-      _.fold(
-        error => throw error,
-        identity
-      )
-    }
+    result.unsafeRunSync()
   }
 
   private def runRequest(request: Request[IO]): IO[ProxyResponse] =

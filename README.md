@@ -5,7 +5,7 @@ http4s-lambda allows you to run http4s `HttpServices` over API Gateway and AWS L
 
 First, add the dependency:
 
-`libraryDependencies += "io.github.howardjohn" %% "http4s-lambda" % "0.1.0"`
+`libraryDependencies += "io.github.howardjohn" %% "http4s-lambda" % "0.2.0"`
 
 Next, we define a simple `HttpService`. Then, we simply need to define a new class for Lambda.
 

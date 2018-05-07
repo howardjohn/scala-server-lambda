@@ -1,14 +1,14 @@
-package io.github.howardjohn.http4s.lambda.example
+package io.github.howardjohn.lambda.http4s.example
 
 import cats.effect.IO
+import io.github.howardjohn.lambda.http4s.Http4sLambdaHandler
+import org.http4s.HttpService
+import org.http4s.circe.jsonOf
 import io.circe.generic.auto._
-import io.github.howardjohn.http4s.lambda.LambdaHandler
-import org.http4s._
-import org.http4s.circe._
 import org.http4s.dsl.io._
 
 object Route {
-  implicit val InputDecoder = jsonOf[IO, Input]
+  implicit val inputDecoder = jsonOf[IO, Input]
 
   // Set up the route
   val service: HttpService[IO] = HttpService[IO] {
@@ -23,7 +23,7 @@ object Route {
 
   // Define the entry point for Lambda
   // Referenced as ` io.github.howardjohn.http4s.lambda.example$Route::handler` in Lambda
-  class EntryPoint extends LambdaHandler(service)
+  class EntryPoint extends Http4sLambdaHandler(service)
 
   case class Input(
     name: String,

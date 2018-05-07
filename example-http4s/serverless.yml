@@ -1,0 +1,25 @@
+service: example-http4s
+
+provider:
+  name: aws
+  runtime: java8
+  region: us-west-2
+  stage: dev
+
+package:
+  artifact: target/scala-2.12/example-http4s.jar
+
+functions:
+  api:
+    handler: io.github.howardjohn.lambda.http4s.example.Route$EntryPoint::handle
+    events:
+      - http:
+          path: "{proxy+}"
+          method: any
+          cors: true
+#      Uncomment below to keep the application warm
+#      - schedule:
+#          rate: rate(4 minutes)
+#          input:
+#            httpMethod: GET
+#            path: /hello/keepWarm

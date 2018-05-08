@@ -2,8 +2,8 @@ package io.github.howardjohn.lambda.http4s
 
 import cats.effect.{Effect, IO}
 import fs2.{text, Stream}
-import io.github.howardjohn.lambda.Encoding._
-import io.github.howardjohn.lambda.{Encoding, LambdaHandler}
+import io.github.howardjohn.lambda.ProxyEncoding._
+import io.github.howardjohn.lambda.{ProxyEncoding, LambdaHandler}
 import org.http4s._
 
 class Http4sLambdaHandler(service: HttpService[IO]) extends LambdaHandler {
@@ -40,7 +40,7 @@ private object Http4sLambdaHandler {
 
   private def parseRequest(request: ProxyRequest): Either[ParseFailure, Request[IO]] =
     for {
-      uri <- Uri.fromString(Encoding.reconstructPath(request))
+      uri <- Uri.fromString(ProxyEncoding.reconstructPath(request))
       method <- Method.fromString(request.httpMethod)
     } yield
       Request[IO](

@@ -7,7 +7,7 @@ import cats.effect.IO
 import io.circe.generic.auto._
 import io.circe.parser.decode
 import io.circe.syntax._
-import io.github.howardjohn.lambda.Encoding.{ProxyRequest, ProxyResponse}
+import io.github.howardjohn.lambda.ProxyEncoding.{ProxyRequest, ProxyResponse}
 import org.http4s._
 import org.http4s.circe._
 import org.http4s.dsl.io._

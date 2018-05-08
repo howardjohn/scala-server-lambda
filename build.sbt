@@ -7,7 +7,7 @@ lazy val root = project
   .in(file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(http4s, exampleHttp4s)
+  .aggregate(common, http4s, exampleHttp4s)
 
 lazy val CirceVersion = "0.9.0"
 lazy val ScalaTestVersion = "3.0.4"

@@ -8,7 +8,7 @@ lazy val root = project
   .in(file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(common, tests, http4s, akka, exampleHttp4s)
+  .aggregate(common, tests, http4s, akka, exampleHttp4s, exampleAkka)
 
 lazy val CirceVersion = "0.9.0"
 lazy val ScalaTestVersion = "3.0.4"
@@ -60,7 +60,6 @@ lazy val http4s = project
   .dependsOn(common)
   .dependsOn(tests % "test")
 
-
 lazy val akka = project
   .in(file("akka-http-lambda"))
   .settings(publishSettings)
@@ -88,13 +87,24 @@ lazy val exampleHttp4s = project
     moduleName := "example-http4s",
     assemblyJarName in assembly := "example-http4s.jar",
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-circe" % Http4sVersion,
-      "io.circe" %% "circe-parser" % CirceVersion,
-      "io.circe" %% "circe-generic" % CirceVersion,
       "org.http4s" %% "http4s-dsl" % Http4sVersion
     )
   )
   .dependsOn(http4s)
+
+lazy val exampleAkka = project
+  .in(file("example-akka-http"))
+  .settings(noPublishSettings)
+  .settings(commonSettings)
+  .settings(
+    moduleName := "example-akka-http",
+    assemblyJarName in assembly := "example-akka-http.jar",
+    libraryDependencies ++= Seq(
+      "com.typesafe.akka" %% "akka-http" % "10.1.1",
+      "com.typesafe.akka" %% "akka-stream" % "2.5.11"
+    )
+  )
+  .dependsOn(akka)
 
 lazy val noPublishSettings = Seq(
   publish := {},

@@ -1,6 +1,6 @@
 package io.github.howardjohn.lambda.http4s
 
-import cats.effect.{Effect, IO}
+import cats.effect.IO
 import fs2.{text, Stream}
 import io.github.howardjohn.lambda.ProxyEncoding._
 import io.github.howardjohn.lambda.{ProxyEncoding, LambdaHandler}

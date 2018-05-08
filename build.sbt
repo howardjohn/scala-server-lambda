@@ -7,7 +7,7 @@ lazy val root = project
   .in(file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(common, http4s, exampleHttp4s)
+  .aggregate(common, tests, http4s, exampleHttp4s)
 
 lazy val CirceVersion = "0.9.0"
 lazy val ScalaTestVersion = "3.0.4"
@@ -25,6 +25,19 @@ lazy val common = project
         "org.scalatest" %% "scalatest" % ScalaTestVersion % "test"
       )
   )
+
+lazy val tests = project
+  .in(file("tests"))
+  .settings(commonSettings)
+  .settings(noPublishSettings)
+  .settings(
+    moduleName := "tests",
+    libraryDependencies ++=
+      Seq(
+        "org.scalatest" %% "scalatest" % ScalaTestVersion
+      )
+  )
+  .dependsOn(common)
 
 lazy val http4s = project
   .in(file("http4s-lambda"))
@@ -48,6 +61,7 @@ lazy val http4s = project
     }
   )
   .dependsOn(common)
+  .dependsOn(tests % "test")
 
 lazy val exampleHttp4s = project
   .in(file("example-http4s"))

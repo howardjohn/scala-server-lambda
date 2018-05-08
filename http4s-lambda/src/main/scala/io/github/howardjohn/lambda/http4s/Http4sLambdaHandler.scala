@@ -3,8 +3,10 @@ package io.github.howardjohn.lambda.http4s
 import cats.effect.IO
 import fs2.{text, Stream}
 import io.github.howardjohn.lambda.ProxyEncoding._
-import io.github.howardjohn.lambda.{ProxyEncoding, LambdaHandler}
+import io.github.howardjohn.lambda.{LambdaHandler, ProxyEncoding}
 import org.http4s._
+
+import scala.util.Try
 
 class Http4sLambdaHandler(service: HttpService[IO]) extends LambdaHandler {
   import Http4sLambdaHandler._
@@ -12,20 +14,21 @@ class Http4sLambdaHandler(service: HttpService[IO]) extends LambdaHandler {
   override def handleRequest(request: ProxyRequest): ProxyResponse =
     parseRequest(request)
       .map(runRequest)
-      .fold(
-        err => throw err,
-        response => response.unsafeRunSync()
-      )
+      .flatMap(_.attempt.unsafeRunSync())
+      .fold(errorResponse, identity)
 
   private def runRequest(request: Request[IO]): IO[ProxyResponse] =
-    service
-      .run(request)
-      .getOrElse(Response.notFound)
-      .flatMap(asProxyResponse)
-
+    Try {
+      service
+        .run(request)
+        .getOrElse(Response.notFound)
+        .flatMap(asProxyResponse)
+    }.fold(errorResponse.andThen(e => IO(e)), identity)
 }
 
 private object Http4sLambdaHandler {
+  private val errorResponse = (err: Throwable) => ProxyResponse(500, Map.empty, err.getMessage)
+
   private def asProxyResponse(resp: Response[IO]): IO[ProxyResponse] =
     resp
       .as[String]

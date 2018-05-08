@@ -35,9 +35,9 @@ trait LambdaHandlerBehavior { this: FeatureSpec with GivenWhenThen =>
       assert(response.body === "Hello World!")
     }
 
-    scenario("A bad http method is used on a route") {
-      Given("a POST request to /hello")
-      val response = runRequest("/hello", httpMethod = "POST")(handler)
+    scenario("Requesting an endpoint that doesn't exist") {
+      Given("a GET request to /bad")
+      val response = runRequest("/bad")(handler)
 
       Then("the status code should be 404")
       assert(response.statusCode === 404)
@@ -54,7 +54,7 @@ trait LambdaHandlerBehavior { this: FeatureSpec with GivenWhenThen =>
       assert(response.body === "Hello World! Hello World! Hello World!")
     }
 
-    scenario("A request takes a long time to respond") {
+    scenario("A request that takes a long time to respond") {
       Given("a GET request to /long")
       val response = runRequest("/long")(handler)
 
@@ -75,8 +75,9 @@ trait LambdaHandlerBehavior { this: FeatureSpec with GivenWhenThen =>
 
     scenario("A request causes an exception") {
       Given("a GET request to /exception")
-      Then("an exception should be thrown")
-      intercept[RouteException](runRequest("/exception")(handler))
+      val response = runRequest("/exception")(handler)
+      Then("the status code should be 500")
+      assert(response.statusCode === 500)
     }
 
     scenario("A request returns an error response") {

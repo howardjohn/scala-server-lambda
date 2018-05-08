@@ -1,16 +1,18 @@
 lazy val commonSettings = Seq(
   organization := "io.github.howardjohn",
-  scalaVersion := "2.12.6"
+  scalaVersion := "2.12.6",
+  version := "0.3.0"
 )
 
 lazy val root = project
   .in(file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(common, tests, http4s, exampleHttp4s)
+  .aggregate(common, tests, http4s, akka, exampleHttp4s)
 
 lazy val CirceVersion = "0.9.0"
 lazy val ScalaTestVersion = "3.0.4"
+lazy val Http4sVersion = "0.18.10"
 
 lazy val common = project
   .in(file("common"))
@@ -45,18 +47,33 @@ lazy val http4s = project
   .settings(commonSettings)
   .settings(
     name := "http4s-lambda",
-    version := "0.2.0",
     moduleName := "http4s-lambda",
     scalacOptions ++= Seq("-Ypartial-unification"),
     libraryDependencies ++= {
-      val Http4sVersion = "0.18.10"
       Seq(
         "org.http4s" %% "http4s-core" % Http4sVersion,
-        "org.http4s" %% "http4s-circe" % Http4sVersion,
-        "io.circe" %% "circe-parser" % CirceVersion,
-        "io.circe" %% "circe-generic" % CirceVersion,
         "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
         "org.http4s" %% "http4s-dsl" % Http4sVersion % "test"
+      )
+    }
+  )
+  .dependsOn(common)
+  .dependsOn(tests % "test")
+
+
+lazy val akka = project
+  .in(file("akka-http-lambda"))
+  .settings(publishSettings)
+  .settings(commonSettings)
+  .settings(
+    name := "akka-http-lambda",
+    moduleName := "akka-http-lambda",
+    scalacOptions ++= Seq("-Ypartial-unification"),
+    libraryDependencies ++= {
+      Seq(
+        "com.typesafe.akka" %% "akka-http" % "10.1.1",
+        "com.typesafe.akka" %% "akka-stream" % "2.5.11",
+        "org.scalatest" %% "scalatest" % ScalaTestVersion % "test"
       )
     }
   )
@@ -71,7 +88,10 @@ lazy val exampleHttp4s = project
     moduleName := "example-http4s",
     assemblyJarName in assembly := "example-http4s.jar",
     libraryDependencies ++= Seq(
-      "org.http4s" %% "http4s-dsl" % "0.18.0-M8"
+      "org.http4s" %% "http4s-circe" % Http4sVersion,
+      "io.circe" %% "circe-parser" % CirceVersion,
+      "io.circe" %% "circe-generic" % CirceVersion,
+      "org.http4s" %% "http4s-dsl" % Http4sVersion
     )
   )
   .dependsOn(http4s)

@@ -113,12 +113,12 @@ lazy val noPublishSettings = Seq(
 )
 
 lazy val publishSettings = Seq(
-  homepage := Some(url("https://github.com/howardjohn/http4s-lambda")),
+  homepage := Some(url("https://github.com/howardjohn/scala-server-lambda")),
   licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
   scmInfo := Some(
     ScmInfo(
-      url("https://github.com/howardjohn/http4s-lambda"),
-      "scm:git@github.com:howardjohn/http4s-lambda.git"
+      url("https://github.com/howardjohn/scala-server-lambda"),
+      "scm:git@github.com:howardjohn/scala-server-lambda.git"
     )),
   developers := List(
     Developer(

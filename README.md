@@ -29,7 +29,7 @@ More thorough examples can be found in the examples directory.
 
 First, add the dependency:
 
-`libraryDependencies += "io.github.howardjohn" %% "http4s-lambda" % "0.3.0"`
+`libraryDependencies += "io.github.howardjohn" %% "http4s-lambda" % "0.3.1"`
 
 Next, we define a simple `HttpService`. Then, we simply need to define a new class for Lambda.
 
@@ -52,7 +52,7 @@ Thats it! Make sure anything dependencies are initialized in the Route object so
 
 First, add the dependency:
 
-`libraryDependencies += "io.github.howardjohn" %% "akka-http-lambda" % "0.3.0"`
+`libraryDependencies += "io.github.howardjohn" %% "akka-http-lambda" % "0.3.1"`
 
 Next, we define a simple `Route`. Then, we simply need to define a new class for Lambda.
 

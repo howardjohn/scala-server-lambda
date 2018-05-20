@@ -1,7 +1,7 @@
 lazy val commonSettings = Seq(
   organization := "io.github.howardjohn",
   scalaVersion := "2.12.6",
-  version := "0.3.0"
+  version := "0.3.1"
 )
 
 lazy val root = project
@@ -17,9 +17,9 @@ lazy val Http4sVersion = "0.18.10"
 lazy val common = project
   .in(file("common"))
   .settings(commonSettings)
-  .settings(noPublishSettings)
+  .settings(publishSettings)
   .settings(
-    moduleName := "common",
+    moduleName := "scala-server-lambda-common",
     libraryDependencies ++=
       Seq(
         "io.circe" %% "circe-generic" % CirceVersion,
@@ -31,9 +31,9 @@ lazy val common = project
 lazy val tests = project
   .in(file("tests"))
   .settings(commonSettings)
-  .settings(noPublishSettings)
+  .settings(publishSettings)
   .settings(
-    moduleName := "tests",
+    moduleName := "scala-server-lambda-tests",
     libraryDependencies ++=
       Seq(
         "org.scalatest" %% "scalatest" % ScalaTestVersion

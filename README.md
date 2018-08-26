@@ -45,7 +45,7 @@ object Route {
 }
 ```
 
-Thats it! Make sure anything dependencies are initialized in the Route object so they are computed only once.
+Thats it! Make sure any dependencies are initialized in the Route object so they are computed only once.
 
 
 ### akka-http
@@ -76,7 +76,7 @@ object Route {
 }
 ```
 
-Thats it! Make sure anything dependencies are initialized in the Route object so they are computed only once.
+Thats it! Make sure any dependencies are initialized in the Route object so they are computed only once.
 
 ## Deploying to AWS
 

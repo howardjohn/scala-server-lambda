@@ -12,7 +12,7 @@ lazy val root = project
 
 lazy val CirceVersion = "0.10.0"
 lazy val ScalaTestVersion = "3.0.4"
-lazy val Http4sVersion = "0.19.0"
+lazy val Http4sVersion = "0.20.0-M2"
 
 lazy val common = project
   .in(file("common"))

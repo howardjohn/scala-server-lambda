@@ -1,7 +1,7 @@
 lazy val commonSettings = Seq(
   organization := "io.github.howardjohn",
   scalaVersion := "2.12.6",
-  version := "0.3.1"
+  version := "0.4.0-SNAPSHOT"
 )
 
 lazy val root = project
@@ -128,6 +128,7 @@ lazy val publishSettings = Seq(
       url = url("https://github.com/howardjohn/")
     )
   ),
+  credentials += Credentials(Path.userHome / ".sbt" / ".credentials"),
   publishMavenStyle := true,
   publishArtifact in Test := false,
   pomIncludeRepository := { _ =>

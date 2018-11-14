@@ -87,3 +87,10 @@ Once we have the jar, all we need to do is upload it to Lambda. The preferred wa
 When deploying to Lambda, the handler should be specified as `<PACKAGE_NAME>.Route$EntryPoint::handler` (if you followed the example above).
 
 Finally, an API can be created in API Gateway. [Lambda Proxy integration](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html) must be enabled.
+
+## Versions
+
+| Version      | http4s Version | akka-http Version |
+|--------------|----------------|-------------------|
+| 0.4-SNAPSHOT | 0.20           | 10.1              |
+| 0.3.1        | 0.18           | 10.1              |

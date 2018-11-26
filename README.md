@@ -29,7 +29,9 @@ More thorough examples can be found in the examples directory.
 
 First, add the dependency:
 
-`libraryDependencies += "io.github.howardjohn" %% "http4s-lambda" % "0.3.1"`
+```scala
+libraryDependencies += "io.github.howardjohn" %% "http4s-lambda" % "0.3.1"
+```
 
 Next, we define a simple `HttpService`. Then, we simply need to define a new class for Lambda.
 
@@ -52,7 +54,9 @@ Thats it! Make sure any dependencies are initialized in the Route object so they
 
 First, add the dependency:
 
-`libraryDependencies += "io.github.howardjohn" %% "akka-http-lambda" % "0.3.1"`
+```scala
+libraryDependencies += "io.github.howardjohn" %% "akka-http-lambda" % "0.3.1"
+```
 
 Next, we define a simple `Route`. Then, we simply need to define a new class for Lambda.
 
@@ -84,7 +88,7 @@ To deploy to Lambda, we need to create a jar with all of our dependencies. The e
 
 Once we have the jar, all we need to do is upload it to Lambda. The preferred way to do this is using the [serverless](https://github.com/serverless/serverless) framework which greatly simplifies this (and is what is used in the examples), but there is no issues with doing it manually.
 
-When deploying to Lambda, the handler should be specified as `<PACKAGE_NAME>.Route$EntryPoint::handler` (if you followed the example above).
+When deploying to Lambda, the handler should be specified as `<PACKAGE_NAME>.Route$EntryPoint::handle` (if you followed the example above).
 
 Finally, an API can be created in API Gateway. [Lambda Proxy integration](https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html) must be enabled.
 

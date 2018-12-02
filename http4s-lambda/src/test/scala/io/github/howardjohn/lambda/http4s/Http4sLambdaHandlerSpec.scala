@@ -7,13 +7,15 @@ import io.github.howardjohn.lambda.LambdaHandlerBehavior
 import io.github.howardjohn.lambda.LambdaHandlerBehavior._
 import org.http4s.circe._
 import org.http4s.dsl.io._
-import org.http4s.{Header, HttpService}
+import org.http4s.{EntityDecoder, Header, HttpRoutes}
 import org.scalatest.{FeatureSpec, GivenWhenThen}
 
 class Http4sLambdaHandlerSpec extends FeatureSpec with LambdaHandlerBehavior with GivenWhenThen {
-  implicit val jsonDecoder = jsonOf[IO, JsonBody]
+  implicit val jsonDecoder: EntityDecoder[IO, JsonBody] = jsonOf[IO, JsonBody]
+
   object TimesQueryMatcher extends OptionalQueryParamDecoderMatcher[Int]("times")
-  val route = HttpService[IO] {
+
+  val route: HttpRoutes[IO] = HttpRoutes.of[IO] {
     case GET -> Root / "hello" :? TimesQueryMatcher(times) =>
       Ok {
         Seq
@@ -29,6 +31,8 @@ class Http4sLambdaHandlerSpec extends FeatureSpec with LambdaHandlerBehavior wit
     case req @ POST -> Root / "post" => req.as[String].flatMap(s => Ok(s))
     case req @ POST -> Root / "json" => req.as[JsonBody].flatMap(s => Ok(LambdaHandlerBehavior.jsonReturn.asJson))
   }
+
   val handler = new Http4sLambdaHandler(route)
+
   scenariosFor(behavior(handler))
 }

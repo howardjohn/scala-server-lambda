@@ -8,7 +8,7 @@ import org.http4s._
 
 import scala.util.Try
 
-class Http4sLambdaHandler(service: HttpService[IO]) extends LambdaHandler {
+class Http4sLambdaHandler(service: HttpRoutes[IO]) extends LambdaHandler {
   import Http4sLambdaHandler._
 
   override def handleRequest(request: ProxyRequest): ProxyResponse =

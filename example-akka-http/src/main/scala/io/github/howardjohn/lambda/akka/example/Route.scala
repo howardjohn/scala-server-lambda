@@ -1,8 +1,8 @@
 package io.github.howardjohn.lambda.akka.example
 
 import akka.actor.ActorSystem
-import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
+import akka.http.scaladsl.server.Route
 import akka.stream.ActorMaterializer
 import io.github.howardjohn.lambda.akka.AkkaHttpLambdaHandler
 

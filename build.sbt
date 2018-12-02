@@ -53,7 +53,8 @@ lazy val http4s = project
       Seq(
         "org.http4s" %% "http4s-core" % Http4sVersion,
         "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
-        "org.http4s" %% "http4s-dsl" % Http4sVersion % "test"
+        "org.http4s" %% "http4s-dsl" % Http4sVersion % "test",
+        "org.http4s" %% "http4s-circe" % Http4sVersion % "test"
       )
     }
   )

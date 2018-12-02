@@ -15,6 +15,7 @@ import org.scalatest.{FeatureSpec, GivenWhenThen}
  * GET /hello?times=3 => "Hello World! Hello World! Hello World!"
  * GET /long => takes a second to complete
  * POST /post with body => responds with the body
+ * POST /json with json body { greeting: "Hello" } => responds with json { greeting: "Goodbye" }
  * GET /exception => throws a RouteException
  * GET /error => responds with a 500 error code
  * GET /header with header InputHeader => responds with a new header,
@@ -73,6 +74,22 @@ trait LambdaHandlerBehavior { this: FeatureSpec with GivenWhenThen =>
       assert(response.body === "body")
     }
 
+    scenario("A POST call is made with a json body") {
+      Given("a POST request with json to /json")
+      val response = runRequest(
+        "/json",
+        body = Some(jsonBodyInput),
+        httpMethod = "POST",
+        headers = Some(Map("Content-Type" -> "application/json"))
+      )(handler)
+
+      Then("the status code should be 200")
+      assert(response.statusCode === 200)
+
+      And("the body should be body")
+      assert(response.body === jsonReturn.asJson.noSpaces)
+    }
+
     scenario("A request causes an exception") {
       Given("a GET request to /exception")
       val response = runRequest("/exception")(handler)
@@ -110,6 +127,10 @@ object LambdaHandlerBehavior {
   val outputHeaderValue = "outputHeaderValue"
   val inputHeader = "InputHeader"
   val inputHeaderValue = "inputHeaderValue"
+
+  case class JsonBody(greeting: String)
+  val jsonBodyInput = JsonBody("Hello").asJson.noSpaces
+  val jsonReturn = JsonBody("Goodbye")
 
   private def runRequest(
     path: String,

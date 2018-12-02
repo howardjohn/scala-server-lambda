@@ -38,9 +38,21 @@ class AkkaHttpLambdaHandler(route: Route)(
       method = parseHttpMethod(request.httpMethod),
       uri = Uri(ProxyEncoding.reconstructPath(request)),
       headers = parseRequestHeaders(request.headers.getOrElse(Map.empty)),
-      entity = request.body.map(HttpEntity.apply).getOrElse(HttpEntity.Empty),
+      entity = parseEntity(request.headers.getOrElse(Map.empty), request.body),
       protocol = HttpProtocols.`HTTP/1.1`
     )
+
+  private def parseEntity(headers: Map[String, String], body: Option[String]): MessageEntity = {
+    val defaultContentType = ContentTypes.`text/plain(UTF-8)`
+    val contentType = ContentType
+      .parse(headers.getOrElse("Content-Type", defaultContentType.value))
+      .getOrElse(defaultContentType)
+
+    body match {
+      case Some(b) => HttpEntity(contentType, b.getBytes)
+      case None => HttpEntity.empty(contentType)
+    }
+  }
 
   private def asProxyResponse(resp: HttpResponse): Future[ProxyResponse] =
     Unmarshal(resp.entity)

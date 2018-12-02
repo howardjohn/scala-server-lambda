@@ -1,6 +1,6 @@
 lazy val commonSettings = Seq(
   organization := "io.github.howardjohn",
-  scalaVersion := "2.12.6",
+  scalaVersion := "2.12.7",
   version := "0.4.0-SNAPSHOT"
 )
 
@@ -10,9 +10,9 @@ lazy val root = project
   .settings(noPublishSettings)
   .aggregate(common, tests, http4s, akka, exampleHttp4s, exampleAkka)
 
-lazy val CirceVersion = "0.10.0"
-lazy val ScalaTestVersion = "3.0.4"
-lazy val Http4sVersion = "0.20.0-M2"
+lazy val CirceVersion = "0.10.1"
+lazy val ScalaTestVersion = "3.0.5"
+lazy val Http4sVersion = "0.20.0-M3"
 
 lazy val common = project
   .in(file("common"))
@@ -71,8 +71,8 @@ lazy val akka = project
     scalacOptions ++= Seq("-Ypartial-unification"),
     libraryDependencies ++= {
       Seq(
-        "com.typesafe.akka" %% "akka-http" % "10.1.1",
-        "com.typesafe.akka" %% "akka-stream" % "2.5.11",
+        "com.typesafe.akka" %% "akka-http" % "10.1.5",
+        "com.typesafe.akka" %% "akka-stream" % "2.5.18",
         "org.scalatest" %% "scalatest" % ScalaTestVersion % "test"
       )
     }
@@ -101,8 +101,8 @@ lazy val exampleAkka = project
     moduleName := "example-akka-http",
     assemblyJarName in assembly := "example-akka-http.jar",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.1.1",
-      "com.typesafe.akka" %% "akka-stream" % "2.5.11"
+      "com.typesafe.akka" %% "akka-http" % "10.1.5",
+      "com.typesafe.akka" %% "akka-stream" % "2.5.18"
     )
   )
   .dependsOn(akka)

@@ -9,7 +9,7 @@ Benefits:
 
 ## Supported Servers
 
-* [http4s](http://http4s.org) - version 0.18
+* [http4s](http://http4s.org) - version 0.20
 * [akka-http](https://doc.akka.io/docs/akka-http/current) - version 10.1.1
 
 ## Dependencies

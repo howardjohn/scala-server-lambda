@@ -35,7 +35,7 @@ private object Http4sLambdaHandler {
       .map { body =>
         ProxyResponse(
           resp.status.code,
-          resp.headers
+          resp.headers.toList
             .map(h => h.name.value -> h.value)
             .toMap,
           body)

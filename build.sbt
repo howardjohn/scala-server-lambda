@@ -1,7 +1,7 @@
 lazy val commonSettings = Seq(
   organization := "io.github.howardjohn",
   scalaVersion := "2.12.7",
-  version := "0.4.0-SNAPSHOT"
+  version := "0.4.0"
 )
 
 lazy val root = project

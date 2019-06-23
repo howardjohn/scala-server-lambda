@@ -96,5 +96,5 @@ Finally, an API can be created in API Gateway. [Lambda Proxy integration](https:
 
 | Version      | http4s Version | akka-http Version |
 |--------------|----------------|-------------------|
-| 0.4-SNAPSHOT | 0.20           | 10.1              |
+| 0.4          | 0.20           | 10.1              |
 | 0.3.1        | 0.18           | 10.1              |

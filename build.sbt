@@ -18,7 +18,7 @@ lazy val root = project
   .in(file("."))
   .settings(commonSettings)
   .settings(noPublishSettings)
-  .aggregate(common, tests, http4s, akka, exampleHttp4s, exampleAkka)
+  .aggregate(common, tests, http4s, http4sZio, akka, exampleHttp4s, exampleAkka)
 
 lazy val CirceVersion = "0.12.1"
 lazy val ScalaTestVersion = "3.1.0"
@@ -70,6 +70,29 @@ lazy val http4s = project
   )
   .dependsOn(common)
   .dependsOn(tests % "test")
+
+lazy val http4sZio = project
+  .in(file("http4s-lambda-zio"))
+  .settings(publishSettings)
+  .settings(commonSettings)
+  .settings(
+    name := "http4s-lambda",
+    moduleName := "http4s-lambda",
+    scalacOptions := scalacVersionOptions(scalaVersion.value),
+    libraryDependencies ++= {
+      Seq(
+        "org.http4s" %% "http4s-core" % Http4sVersion,
+        "org.scalatest" %% "scalatest" % ScalaTestVersion % "test",
+        "org.http4s" %% "http4s-dsl" % Http4sVersion % "test",
+        "org.http4s" %% "http4s-circe" % Http4sVersion % "test",
+        "dev.zio" %% "zio" % "1.0.0-RC14",
+        "dev.zio" %% "zio-interop-cats" % "2.0.0.0-RC5"
+      )
+    }
+  )
+  .dependsOn(common)
+  .dependsOn(tests % "test")
+  .dependsOn(http4s % "test->test;compile->compile")
 
 lazy val akka = project
   .in(file("akka-http-lambda"))

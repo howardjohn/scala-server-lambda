@@ -1,6 +1,6 @@
 lazy val commonSettings = Seq(
   organization := "io.github.howardjohn",
-  scalaVersion := "2.12.7",
+  scalaVersion := "2.12.10",
   version := "0.4.0"
 )
 
@@ -10,9 +10,9 @@ lazy val root = project
   .settings(noPublishSettings)
   .aggregate(common, tests, http4s, akka, exampleHttp4s, exampleAkka)
 
-lazy val CirceVersion = "0.10.1"
+lazy val CirceVersion = "0.12.1"
 lazy val ScalaTestVersion = "3.0.5"
-lazy val Http4sVersion = "0.20.3"
+lazy val Http4sVersion = "0.21.0-M5"
 
 lazy val common = project
   .in(file("common"))

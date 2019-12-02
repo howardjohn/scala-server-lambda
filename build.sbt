@@ -1,6 +1,16 @@
+lazy val Scala212Version = "2.12.10"
+lazy val Scala213Version = "2.13.1"
+
+def scalacVersionOptions(scalaVersion: String) =
+  CrossVersion.partialVersion(scalaVersion) match {
+    case Some((2, 12)) => Seq("-Ypartial-unification")
+    case _ => Nil
+  }
+
 lazy val commonSettings = Seq(
   organization := "io.github.howardjohn",
-  scalaVersion := "2.12.10",
+  scalaVersion := Scala212Version,
+  crossScalaVersions := Seq(Scala212Version, Scala213Version),
   version := "0.4.0"
 )
 
@@ -11,7 +21,7 @@ lazy val root = project
   .aggregate(common, tests, http4s, akka, exampleHttp4s, exampleAkka)
 
 lazy val CirceVersion = "0.12.1"
-lazy val ScalaTestVersion = "3.0.5"
+lazy val ScalaTestVersion = "3.1.0"
 lazy val Http4sVersion = "0.21.0-M5"
 
 lazy val common = project
@@ -48,7 +58,7 @@ lazy val http4s = project
   .settings(
     name := "http4s-lambda",
     moduleName := "http4s-lambda",
-    scalacOptions ++= Seq("-Ypartial-unification"),
+    scalacOptions := scalacVersionOptions(scalaVersion.value),
     libraryDependencies ++= {
       Seq(
         "org.http4s" %% "http4s-core" % Http4sVersion,
@@ -68,11 +78,11 @@ lazy val akka = project
   .settings(
     name := "akka-http-lambda",
     moduleName := "akka-http-lambda",
-    scalacOptions ++= Seq("-Ypartial-unification"),
+    scalacOptions ++= scalacVersionOptions(scalaVersion.value),
     libraryDependencies ++= {
       Seq(
-        "com.typesafe.akka" %% "akka-http" % "10.1.5",
-        "com.typesafe.akka" %% "akka-stream" % "2.5.18",
+        "com.typesafe.akka" %% "akka-http" % "10.1.10",
+        "com.typesafe.akka" %% "akka-stream" % "2.5.26",
         "org.scalatest" %% "scalatest" % ScalaTestVersion % "test"
       )
     }
@@ -101,8 +111,8 @@ lazy val exampleAkka = project
     moduleName := "example-akka-http",
     assemblyJarName in assembly := "example-akka-http.jar",
     libraryDependencies ++= Seq(
-      "com.typesafe.akka" %% "akka-http" % "10.1.5",
-      "com.typesafe.akka" %% "akka-stream" % "2.5.18"
+      "com.typesafe.akka" %% "akka-http" % "10.1.10",
+      "com.typesafe.akka" %% "akka-stream" % "2.5.26"
     )
   )
   .dependsOn(akka)

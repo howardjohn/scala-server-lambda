@@ -12,9 +12,10 @@ import scala.util.Try
 trait Http4sLambdaHandlerK[F[_]] extends LambdaHandler {
   val service: HttpRoutes[F]
 
-  def handleRequest(request: ProxyRequest)(implicit F: MonadError[F, Throwable], decoder: EntityDecoder[F, String]): ProxyResponse = ???
+  def handleRequest(request: ProxyRequest): ProxyResponse
 
-  def runRequest(request: Request[F])(implicit F: MonadError[F, Throwable], decoder: EntityDecoder[F, String]): F[ProxyResponse] =
+  def runRequest(request: Request[F])(implicit F: MonadError[F, Throwable],
+                                      decoder: EntityDecoder[F, String]): F[ProxyResponse] =
     Try {
       service
         .run(request)

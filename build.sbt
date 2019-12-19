@@ -76,8 +76,8 @@ lazy val http4sZio = project
   .settings(publishSettings)
   .settings(commonSettings)
   .settings(
-    name := "http4s-lambda",
-    moduleName := "http4s-lambda",
+    name := "http4s-lambda-zio",
+    moduleName := "http4s-lambda-zio",
     scalacOptions := scalacVersionOptions(scalaVersion.value),
     libraryDependencies ++= {
       Seq(

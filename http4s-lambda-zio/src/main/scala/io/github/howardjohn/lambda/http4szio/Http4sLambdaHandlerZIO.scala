@@ -6,7 +6,7 @@ import org.http4s._
 import zio._
 import zio.interop.catz._
 
-case class Http4sLambdaHandlerZIO(service: HttpRoutes[Task]) extends Http4sLambdaHandlerK[Task] {
+class Http4sLambdaHandlerZIO(val service: HttpRoutes[Task]) extends Http4sLambdaHandlerK[Task] {
   val runtime: DefaultRuntime = new DefaultRuntime {}
 
   def handleRequest(request: ProxyRequest): ProxyResponse =

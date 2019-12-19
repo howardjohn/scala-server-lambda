@@ -11,7 +11,7 @@ import org.scalatest.{FeatureSpec, GivenWhenThen}
 class Http4sLambdaHandlerSpec extends FeatureSpec with LambdaHandlerBehavior with GivenWhenThen {
   implicit val jsonDecoder: EntityDecoder[IO, JsonBody] = jsonOf[IO, JsonBody]
 
-  val handler = Http4sLambdaHandler(new TestRoutes[IO].routes)
+  val handler = new Http4sLambdaHandler(new TestRoutes[IO].routes)
 
   scenariosFor(behavior(handler))
 }

@@ -58,7 +58,7 @@ lazy val http4s = project
   .settings(
     name := "http4s-lambda",
     moduleName := "http4s-lambda",
-    scalacOptions := scalacVersionOptions(scalaVersion.value),
+    scalacOptions ++= scalacVersionOptions(scalaVersion.value),
     libraryDependencies ++= {
       Seq(
         "org.http4s" %% "http4s-core" % Http4sVersion,
@@ -78,7 +78,7 @@ lazy val http4sZio = project
   .settings(
     name := "http4s-lambda-zio",
     moduleName := "http4s-lambda-zio",
-    scalacOptions := scalacVersionOptions(scalaVersion.value),
+    scalacOptions ++= scalacVersionOptions(scalaVersion.value),
     libraryDependencies ++= {
       Seq(
         "org.http4s" %% "http4s-core" % Http4sVersion,

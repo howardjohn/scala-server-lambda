@@ -1,2 +1,7 @@
 target
 .idea
+
+# Metals IDE specific
+project/metals.sbt
+.bloop
+.metals

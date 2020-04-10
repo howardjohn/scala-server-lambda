@@ -1,9 +1,5 @@
 language: scala
 
-scala:
-  - 2.12.10
-  - 2.13.1
-
 before_install:
   - git fetch --tags
 
@@ -15,9 +11,9 @@ stages:
 jobs:
   include:
     - stage: test
-    - name: compile
-      script: sbt compile
-    - name: formatting
-      script: ./bin/scalafmt --test
+    - name: compile and test
+      script: sbt +compile +test
+    # - name: formatting
+    # script: ./bin/scalafmt --test
     - stage: release # Only runs if previous stages pass
       script: sbt ci-release

@@ -1,4 +1,19 @@
 language: scala
 
-scala:
-  - 2.12.10
+before_install:
+  - git fetch --tags
+
+stages:
+  - name: test
+  - name: release
+    if: ((branch = master AND type = push) OR (tag IS present)) AND NOT fork
+
+jobs:
+  include:
+    - stage: test
+    - name: compile and test
+      script: sbt +compile +test
+    # - name: formatting
+    # script: ./bin/scalafmt --test
+    - stage: release # Only runs if previous stages pass
+      script: sbt ci-release

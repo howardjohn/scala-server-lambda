@@ -8,10 +8,8 @@ def scalacVersionOptions(scalaVersion: String) =
   }
 
 lazy val commonSettings = Seq(
-  organization := "io.github.howardjohn",
   scalaVersion := Scala212Version,
   crossScalaVersions := Seq(Scala212Version, Scala213Version),
-  version := "0.4.0"
 )
 
 lazy val root = project
@@ -20,6 +18,31 @@ lazy val root = project
   .settings(noPublishSettings)
   .aggregate(common, tests, http4s, http4sZio, akka, exampleHttp4s, exampleAkka)
 
+inThisBuild(List(
+  organization := "com.dvdkly",
+  homepage := Some(url("https://github.com/kellydavid/scala-server-lambda")),
+  licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/kellydavid/scala-server-lambda"),
+      "scm:git@github.com:kellydavid/scala-server-lambda.git"
+    )),
+  developers := List(
+    Developer(
+      id = "howardjohn",
+      name = "John Howard",
+      email = "johnbhoward96@gmail.com",
+      url = url("https://github.com/howardjohn/")
+    ),
+    Developer(
+      id = "kellydavid",
+      name = "David Kelly",
+      email = "kellydavid178@gmail.com",
+      url = url("https://dvdkly.com")
+    )
+  )
+))
+
 lazy val CirceVersion = "0.12.1"
 lazy val ScalaTestVersion = "3.1.0"
 lazy val Http4sVersion = "0.21.0-M5"
@@ -27,7 +50,6 @@ lazy val Http4sVersion = "0.21.0-M5"
 lazy val common = project
   .in(file("common"))
   .settings(commonSettings)
-  .settings(publishSettings)
   .settings(
     moduleName := "scala-server-lambda-common",
     libraryDependencies ++=
@@ -41,7 +63,6 @@ lazy val common = project
 lazy val tests = project
   .in(file("tests"))
   .settings(commonSettings)
-  .settings(publishSettings)
   .settings(
     moduleName := "scala-server-lambda-tests",
     libraryDependencies ++=
@@ -53,7 +74,6 @@ lazy val tests = project
 
 lazy val http4s = project
   .in(file("http4s-lambda"))
-  .settings(publishSettings)
   .settings(commonSettings)
   .settings(
     name := "http4s-lambda",
@@ -73,7 +93,6 @@ lazy val http4s = project
 
 lazy val http4sZio = project
   .in(file("http4s-lambda-zio"))
-  .settings(publishSettings)
   .settings(commonSettings)
   .settings(
     name := "http4s-lambda-zio",
@@ -96,7 +115,6 @@ lazy val http4sZio = project
 
 lazy val akka = project
   .in(file("akka-http-lambda"))
-  .settings(publishSettings)
   .settings(commonSettings)
   .settings(
     name := "akka-http-lambda",
@@ -141,38 +159,6 @@ lazy val exampleAkka = project
   .dependsOn(akka)
 
 lazy val noPublishSettings = Seq(
-  publish := {},
-  publishLocal := {},
-  publishArtifact := false
+  skip in publish := true
 )
 
-lazy val publishSettings = Seq(
-  homepage := Some(url("https://github.com/howardjohn/scala-server-lambda")),
-  licenses := Seq("MIT" -> url("http://opensource.org/licenses/MIT")),
-  scmInfo := Some(
-    ScmInfo(
-      url("https://github.com/howardjohn/scala-server-lambda"),
-      "scm:git@github.com:howardjohn/scala-server-lambda.git"
-    )),
-  developers := List(
-    Developer(
-      id = "howardjohn",
-      name = "John Howard",
-      email = "johnbhoward96@gmail.com",
-      url = url("https://github.com/howardjohn/")
-    )
-  ),
-  credentials += Credentials(Path.userHome / ".sbt" / ".credentials"),
-  publishMavenStyle := true,
-  publishArtifact in Test := false,
-  pomIncludeRepository := { _ =>
-    false
-  },
-  publishTo := {
-    val nexus = "https://oss.sonatype.org/"
-    if (isSnapshot.value)
-      Some("snapshots" at nexus + "content/repositories/snapshots")
-    else
-      Some("releases" at nexus + "service/local/staging/deploy/maven2")
-  }
-)

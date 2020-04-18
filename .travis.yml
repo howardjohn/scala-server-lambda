@@ -1,5 +1,9 @@
 language: scala
 
+scala:
+  - 2.12.10
+  - 2.13.1
+
 before_install:
   - git fetch --tags
 
@@ -17,3 +21,9 @@ jobs:
     # script: ./bin/scalafmt --test
     - stage: release # Only runs if previous stages pass
       script: sbt version ci-release
+
+cache:
+  directories:
+  - $HOME/.sbt
+  - $HOME/.ivy2
+  - $HOME/.cache

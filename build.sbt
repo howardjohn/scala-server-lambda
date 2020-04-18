@@ -63,6 +63,7 @@ lazy val common = project
 lazy val tests = project
   .in(file("tests"))
   .settings(commonSettings)
+  .settings(noPublishSettings)
   .settings(
     moduleName := "scala-server-lambda-tests",
     libraryDependencies ++=
@@ -76,8 +77,8 @@ lazy val http4s = project
   .in(file("http4s-lambda"))
   .settings(commonSettings)
   .settings(
-    name := "http4s-lambda",
-    moduleName := "http4s-lambda",
+    name := "scala-server-lambda-http4s",
+    moduleName := "scala-server-lambda-http4s",
     scalacOptions ++= scalacVersionOptions(scalaVersion.value),
     libraryDependencies ++= {
       Seq(
@@ -95,8 +96,8 @@ lazy val http4sZio = project
   .in(file("http4s-lambda-zio"))
   .settings(commonSettings)
   .settings(
-    name := "http4s-lambda-zio",
-    moduleName := "http4s-lambda-zio",
+    name := "scala-server-lambda-http4s-zio",
+    moduleName := "scala-server-lambda-http4s-zio",
     scalacOptions ++= scalacVersionOptions(scalaVersion.value),
     libraryDependencies ++= {
       Seq(
@@ -117,8 +118,8 @@ lazy val akka = project
   .in(file("akka-http-lambda"))
   .settings(commonSettings)
   .settings(
-    name := "akka-http-lambda",
-    moduleName := "akka-http-lambda",
+    name := "scala-server-lambda-akka-http",
+    moduleName := "scala-server-lambda-akka-http",
     scalacOptions ++= scalacVersionOptions(scalaVersion.value),
     libraryDependencies ++= {
       Seq(

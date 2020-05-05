@@ -20,9 +20,9 @@ lazy val root = project
   .settings(noPublishSettings)
   .aggregate(common, tests, http4s, http4sZio, akka, exampleHttp4s, exampleAkka)
 
-lazy val CirceVersion = "0.12.1"
+lazy val CirceVersion = "0.13.0"
 lazy val ScalaTestVersion = "3.1.0"
-lazy val Http4sVersion = "0.21.0-M5"
+lazy val Http4sVersion = "0.21.3"
 
 lazy val common = project
   .in(file("common"))
